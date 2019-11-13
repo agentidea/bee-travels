@@ -1,0 +1,5 @@
+---
+applications:
+ - name: bee-travels-exchange-rate
+   random-route: true
+   memory: 256M
