@@ -1,4 +1,4 @@
-import { getCurrencyExchangeRate, getCurrencyExchangeRates } from "../../src/services/serviceHandler";
+import { getCurrencyExchangeRate, getCurrencyExchangeRates, convertAlgorithm } from "../../src/services/serviceHandler";
 
 import { describe, it } from "mocha";
 import { assert, expect } from "chai";
@@ -53,6 +53,26 @@ describe("Get a specific rate for a specific country code that does exist, i.e. 
       assert(isNaN(data) === false, "expect daily rate as a number");
       var res = isNaN(parseFloat(data));    // test float -> https://stackoverflow.com/questions/12467542/how-can-i-check-if-a-string-is-a-float
       assert( res === false, "expect daily rate as a float"); 
+      done();
+    }).catch(err => {
+      assert()
+      done(err);
+    });
+  });
+});
+
+describe("test conversion algorith", () => {
+  it("should return a numeric rate ", (done) => {
+    var fromValue = 19; //YEN
+    var expectedValue= 2.60; //ZAR 
+    var fromCurrencyCode ='JPY';
+    var toCurrencyCode = 'ZAR';
+    var convertAlgorithmRef = convertAlgorithm(fromValue, fromCurrencyCode, toCurrencyCode);
+    convertAlgorithmRef.then(data => {
+      assert(isNaN(data) === false, "expect a number");
+      var res = isNaN(parseFloat(data));    // test float -> https://stackoverflow.com/questions/12467542/how-can-i-check-if-a-string-is-a-float
+      assert( res === false, "expect daily rate as a float"); 
+      assert( parseFloat(data) === expectedValue, "Nov 15 2019");
       done();
     }).catch(err => {
       assert()

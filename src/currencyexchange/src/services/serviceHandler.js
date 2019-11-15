@@ -40,4 +40,46 @@ function getCurrencyExchangeRates() {
             });
       });
   }
-export { getCurrencyExchangeRate, getCurrencyExchangeRates };
+
+function convertAlgorithm(fromValue, fromCurrencyCode, toCurrencyCode) {
+    return new Promise(
+        function (resolve, reject) {
+            var fromCurrencyInEurosData = getCurrencyExchangeRate(fromCurrencyCode);
+            
+
+            fromCurrencyInEurosData.then(function (fromEuros) {
+                // console.log(`  1 jpy in euros is ${fromCurrencyCode}`);
+                // console.log(fromEuros);
+                //resolve(fromEuros);
+                var fromTotal = fromValue / fromEuros;
+               
+
+                var toCurrencyInEurosData = getCurrencyExchangeRate(toCurrencyCode);
+                toCurrencyInEurosData.then(function (toEuros){
+
+                    console.log(`  ${fromValue} jpy in euros is ${fromTotal}`);
+                console.log(fromTotal);
+
+                    console.log(`to ${toCurrencyCode}`);
+                    console.log(toEuros);
+
+                    var conv = fromTotal*toEuros;
+                    
+                    console.log(`unrounded it converts to  ${conv}`);
+                    var roundedNum = (Math.round( conv * 100 ) / 100).toFixed(2);
+                    console.log(`rounded it converts to  ${toCurrencyCode}`);
+                    console.log(roundedNum);
+                    resolve(roundedNum);
+                });
+
+            
+        }).catch(function (err) {
+            
+            console.error(err);
+            
+        });
+    });
+}
+
+
+export { getCurrencyExchangeRate, getCurrencyExchangeRates, convertAlgorithm };
