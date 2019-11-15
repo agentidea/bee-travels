@@ -5,18 +5,19 @@
 import axios from "axios";
 import { rejects } from "assert";
 
-export const URL_ENDPOINT = 'https://api.exchangeratesapi.io/latest';
+export const BASE_URL_ENDPOINT = 'https://api.exchangeratesapi.io/';
 
-function getCurrencyExchangeRate(countryCurrencyCode) {
+function getCurrencyExchangeRate(countryCurrencyCode, timeIndicator='latest') {
   return new Promise(
     function (resolve, reject) {
         if(countryCurrencyCode) {
-        axios.get(URL_ENDPOINT)
+        var currencyUrl = `${BASE_URL_ENDPOINT}${timeIndicator}`;
+        console.log(currencyUrl);
+        axios.get(currencyUrl)
             .then(function (response){
                 if(response.data.rates.hasOwnProperty(countryCurrencyCode) === true){
                     resolve(response.data.rates[countryCurrencyCode]);
                 } else {
-                    
                     reject(`no country code ${countryCurrencyCode}`)
                 }
             })
@@ -28,23 +29,28 @@ function getCurrencyExchangeRate(countryCurrencyCode) {
     });
 }
 
-function getCurrencyExchangeRates() {
+function getCurrencyExchangeRates(timeIndicator='latest') {
     return new Promise(
       function (resolve) {
-          axios.get(URL_ENDPOINT)
+        var currencyUrl = `${BASE_URL_ENDPOINT}${timeIndicator}`;
+        console.log(currencyUrl);
+          axios.get(currencyUrl)
             .then(function (response){
                 resolve(response.data);
             })
             .catch(function (error){
+                //Yan suggests maybe return dummy data ...
+
+                //tdd - mocks share learnings thoughts ... 
                 console.log(error);
             });
       });
   }
 
-function convertAlgorithm(fromValue, fromCurrencyCode, toCurrencyCode) {
+function convertAlgorithm(fromValue, fromCurrencyCode, toCurrencyCode, historicalDate) {
     return new Promise(
         function (resolve, reject) {
-            var fromCurrencyInEurosData = getCurrencyExchangeRate(fromCurrencyCode);
+            var fromCurrencyInEurosData = getCurrencyExchangeRate(fromCurrencyCode, historicalDate);
             
 
             fromCurrencyInEurosData.then(function (fromEuros) {

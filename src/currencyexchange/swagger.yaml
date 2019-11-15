@@ -31,7 +31,7 @@ paths:
         '500':
           description: Internal Server Error
   
-    /search/:
+    /currency/search/:
     post:
       tags:
         - name: CurrencyCode
@@ -60,7 +60,7 @@ paths:
         '500':
           description: Internal Server Error
         '502':
-          description: Error connecting to datasource
+          description: Error connecting to service
 
   /currency/{currencyFromAmount}/{currencyFromCode}/{currencyToCode}:
     get:
@@ -68,7 +68,7 @@ paths:
         - Currency
         - Conversion
       summary: given currencyFromCode and currencyFromAmount (float) and currencyToCode, using daily rates, RETURNS the currencyToCode value (float)
-      description: ''
+      description: 'get the latest conversion rate for the day based off the clock on the server'
       produces:
         - application/json
       parameters:

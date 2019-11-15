@@ -64,10 +64,11 @@ describe("Get a specific rate for a specific country code that does exist, i.e. 
 describe("test conversion algorith", () => {
   it("should return a numeric rate ", (done) => {
     var fromValue = 19; //YEN
-    var expectedValue= 2.60; //ZAR 
+    var expectedValue= 2.57; //ZAR 
     var fromCurrencyCode ='JPY';
     var toCurrencyCode = 'ZAR';
-    var convertAlgorithmRef = convertAlgorithm(fromValue, fromCurrencyCode, toCurrencyCode);
+    var historicalDate = '2019-11-15';  
+    var convertAlgorithmRef = convertAlgorithm(fromValue, fromCurrencyCode, toCurrencyCode, historicalDate);
     convertAlgorithmRef.then(data => {
       assert(isNaN(data) === false, "expect a number");
       var res = isNaN(parseFloat(data));    // test float -> https://stackoverflow.com/questions/12467542/how-can-i-check-if-a-string-is-a-float

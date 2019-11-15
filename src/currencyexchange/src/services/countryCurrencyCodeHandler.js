@@ -1,7 +1,7 @@
 /**
  * Service for getting metadata for 
  * currency name and short
- * 3 char code by country/terrirory name 
+ * 3 char code by country/territory name 
  * from CSV file in data dir
  * Country,CurrencyName,CurrencyCode
  *  
