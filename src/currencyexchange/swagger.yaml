@@ -35,7 +35,7 @@ paths:
     post:
       tags:
         - name: CurrencyCode
-          description: 3 character currency code
+          description: 3 character currency code ( ISO-4217 )
         - name: CurrencyName
           description: Currency name
         - name: Country

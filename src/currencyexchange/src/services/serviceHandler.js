@@ -1,6 +1,6 @@
 /**
- * Service for retreiving exchange data from an external API
- *  
+ * Service for getting exchange data 
+ * from an external API
  */
 import axios from "axios";
 import { rejects } from "assert";
@@ -16,7 +16,7 @@ function getCurrencyExchangeRate(countryCurrencyCode) {
                 if(response.data.rates.hasOwnProperty(countryCurrencyCode) === true){
                     resolve(response.data.rates[countryCurrencyCode]);
                 } else {
-                    //throw new Error(`no key found for currency code ${countryCurrencyCode}`);
+                    
                     reject(`no country code ${countryCurrencyCode}`)
                 }
             })
