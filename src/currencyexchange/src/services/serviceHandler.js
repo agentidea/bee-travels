@@ -47,9 +47,9 @@ function getCurrencyExchangeRates(timeIndicator = 'latest') {
   });
 }
 
-function convertAlgorithm(fromValue,fromEuros, toEuros) {
+function convertAlgorithm(fromValue, fromEuros, toEuros) {
   const fromTotal = fromValue / fromEuros;
-  const roundedNum = (Math.round( fromTotal * toEuros * 100 ) / 100).toFixed(2);
+  const roundedNum = (Math.round(fromTotal * toEuros * 100) / 100).toFixed(2);
   return roundedNum;
 }
 
@@ -59,7 +59,7 @@ async function convertCurrency(fromValue, fromCurrencyCode, toCurrencyCode, hist
     getCurrencyExchangeRate(toCurrencyCode, historicalDate),
   ]);
 
-  return convertAlgorithm(fromValue, fromEuros, toEuros)
+  return convertAlgorithm(fromValue, fromEuros, toEuros);
 }
 
 export { getCurrencyExchangeRate, getCurrencyExchangeRates, convertAlgorithm, convertCurrency };
