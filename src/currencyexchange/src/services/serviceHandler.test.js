@@ -2,18 +2,15 @@ import {
   getCurrencyExchangeRate,
   getCurrencyExchangeRates,
   convertAlgorithm,
-} from '../../src/services/serviceHandler';
+} from './serviceHandler';
 
-import { describe, it } from 'mocha';
-import { assert, expect } from 'chai';
-
-describe('Get all currency exchange rates', () => {
+describe.only('Get all currency exchange rates', () => {
   it('should return all 3 letter country codes with currency for the day', done => {
     var currencyRateByCountryData = getCurrencyExchangeRates();
     currencyRateByCountryData
       .then(data => {
-        assert(data.rates !== null, "Data should have a Dict called 'rates'");
-        assert(data.base === 'EUR', 'base rate should be EUR');
+        expect(data.rates).not.toBeNull()
+        expect(data.base).toEqual('USD')
         done();
       })
       .catch(err => {
@@ -73,7 +70,7 @@ describe('Get a specific rate for a specific country code that does exist, i.e. 
 });
 
 describe('test conversion algorith', () => {
-  it('should return a numeric rate ', done => {
+  it('should return a numeric rate', done => {
     var fromValue = 19; //YEN
     var expectedValue = 2.56; //ZAR
     var fromCurrencyCode = 'JPY';

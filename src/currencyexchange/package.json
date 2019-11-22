@@ -8,9 +8,8 @@
     "server:prod": "node ./dist/bin/www",
     "dev": "NODE_ENV=development npm-run-all server",
     "clean": "rimraf dist",
-    "test-suite": "babel-node test/run",
-    "test": "npm-run-all test-suite",
-    "test:watch": "nodemon -x 'npm run build && npm run test' -w ./src -w ./test",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "build": "babel ./src --out-dir dist",
     "prod": "NODE_ENV=production npm-run-all clean build server:prod",
     "format": "prettier --write 'src/**/*.js' 'test/**/*.js'"
@@ -35,13 +34,10 @@
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
     "babel-eslint": "^10.0.3",
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
     "clean-css": ">=4.1.11",
     "constantinople": ">=3.1.1",
     "eslint": "^6.5.1",
-    "mocha": "^6.2.1",
-    "nodemon": "^1.19.4",
+    "jest": "^24.9.0",
     "prettier": "^1.19.1",
     "uglify-js": ">=2.6.0"
   }
