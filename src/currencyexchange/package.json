@@ -12,14 +12,14 @@
     "test:watch": "jest --watch",
     "build": "babel ./src --out-dir dist",
     "prod": "NODE_ENV=production npm-run-all clean build server:prod",
-    "format": "prettier --write 'src/**/*.js' 'test/**/*.js'"
+    "format": "prettier --write 'src/**/*.+(js|json)'"
   },
   "dependencies": {
     "axios": "^0.19.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
+    "csvtojson": "^2.0.10",
     "debug": "~2.6.9",
-    "express": "~4.16.0",
     "fast-csv": "^3.4.0",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",

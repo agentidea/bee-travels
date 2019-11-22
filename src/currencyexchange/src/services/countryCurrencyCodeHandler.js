@@ -6,82 +6,45 @@
  * Country,CurrencyName,CurrencyCode
  *
  */
-import { parse } from 'fast-csv';
-import { createReadStream } from 'fs';
-import { rejects, doesNotReject } from 'assert';
+import csv from 'csvtojson';
 
-function getCurrencyNameAndCode(country) {
-  const fileStream = createReadStream(process.env.INIT_CWD + '/data/countryCurrencyMetadata.csv');
-  const parser = parse({ headers: true });
-
-  return new Promise(function(resolve, reject) {
-    if (country !== null && typeof country != 'undefined') {
-      var currencyMeta;
-      fileStream
-        .pipe(parser)
-        .on('error', error => console.error(error))
-        .on('readable', () => {
-          for (let row = parser.read(); row; row = parser.read()) {
-            var tempCountry = JSON.parse(JSON.stringify(row)).country;
-            if (country.trim().toUpperCase() == tempCountry.trim().toUpperCase()) {
-              currencyMeta = {
-                CurrencyName: JSON.parse(JSON.stringify(row)).currencyName,
-                CurrencyCode: JSON.parse(JSON.stringify(row)).currencyCode,
-              };
-              break;
-            }
-          }
-
-          if (currencyMeta === null) {
-            reject(`no country found for country name ${country}`);
-          }
-        })
-        .on('end', () => {
-          resolve(currencyMeta);
-        });
-    } else {
-      resolve(new Error('please pass in a country name'));
-    }
-  });
+async function readData() {
+  const jsonArray = await csv({
+    delimiter: ',',
+  }).fromFile('./data/countryCurrencyMetadata.csv');
+  return jsonArray;
 }
 
-//CurrencyCode, return Country name and CurrencyName
-function getCountryAndCurrencyCode(currencyCode) {
-  const fileStream = createReadStream(process.env.INIT_CWD + '/data/countryCurrencyMetadata.csv');
-  const parser = parse({ headers: true });
+async function getCurrencyNameAndCode(countryName) {
+  if (!countryName) {
+    throw new Error('please pass in a country name');
+  }
 
-  return new Promise(function(resolve, reject) {
-    if (
-      currencyCode !== null &&
-      typeof currencyCode != 'undefined' &&
-      currencyCode.trim().length == 3
-    ) {
-      var currencyMeta;
-      fileStream
-        .pipe(parser)
-        .on('error', error => console.error(error))
-        .on('readable', () => {
-          for (let row = parser.read(); row; row = parser.read()) {
-            var tempCurrencyCode = JSON.parse(JSON.stringify(row)).currencyCode;
-            if (currencyCode.trim().toUpperCase() == tempCurrencyCode.trim().toUpperCase()) {
-              currencyMeta = {
-                CurrencyName: JSON.parse(JSON.stringify(row)).currencyName,
-                Country: JSON.parse(JSON.stringify(row)).country,
-              };
-              break;
-            }
-          }
+  const data = await readData();
+  const countryRow = data.find(row => row.country.toLowerCase() === countryName.toLowerCase());
 
-          if (currencyMeta === null) {
-            reject(`currency code ${currencyCode} not found`);
-          }
-        })
-        .on('end', () => {
-          resolve(currencyMeta);
-        });
-    } else {
-      resolve(new Error('please pass in a 3 character currency code'));
-    }
-  });
+  if (!countryRow) {
+    throw new Error(`no country found for country name ${countryName}`);
+  }
+
+  return countryRow;
 }
+
+async function getCountryAndCurrencyCode(currencyCode) {
+  if (!currencyCode) {
+    throw new Error('please pass in a 3 character currency code');
+  }
+
+  const data = await readData();
+  const countryRow = data.find(
+    row => row.currencyCode.toUpperCase() === currencyCode.toUpperCase()
+  );
+
+  if (!countryRow) {
+    throw new Error(`currency code ${currencyCode} not found`);
+  }
+
+  return countryRow;
+}
+
 export { getCurrencyNameAndCode, getCountryAndCurrencyCode };
