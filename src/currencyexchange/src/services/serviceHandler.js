@@ -18,7 +18,7 @@ function getCurrencyExchangeRate(countryCurrencyCode, timeIndicator = 'latest') 
           if (response.data.rates.hasOwnProperty(countryCurrencyCode) === true) {
             resolve(response.data.rates[countryCurrencyCode]);
           } else {
-            reject(`no country code ${countryCurrencyCode}`);
+            reject(new Error(`no country code ${countryCurrencyCode}`));
           }
         })
         .catch(function(error) {
@@ -47,19 +47,19 @@ function getCurrencyExchangeRates(timeIndicator = 'latest') {
   });
 }
 
-async function convertAlgorithm(fromValue, fromCurrencyCode, toCurrencyCode, historicalDate) {
-  try {
-    const [fromEuros, toEuros] = await Promise.all([
-      getCurrencyExchangeRate(fromCurrencyCode, historicalDate),
-      getCurrencyExchangeRate(toCurrencyCode, historicalDate),
-    ]);
-
-    const fromTotal = fromValue / fromEuros;
-    const roundedNum = (Math.round( fromTotal * toEuros * 100 ) / 100).toFixed(2);
-    return roundedNum;
-  } catch (e) {
-    console.error(err);
-  }
+function convertAlgorithm(fromValue,fromEuros, toEuros) {
+  const fromTotal = fromValue / fromEuros;
+  const roundedNum = (Math.round( fromTotal * toEuros * 100 ) / 100).toFixed(2);
+  return roundedNum;
 }
 
-export { getCurrencyExchangeRate, getCurrencyExchangeRates, convertAlgorithm };
+async function convertCurrency(fromValue, fromCurrencyCode, toCurrencyCode, historicalDate) {
+  const [fromEuros, toEuros] = await Promise.all([
+    getCurrencyExchangeRate(fromCurrencyCode, historicalDate),
+    getCurrencyExchangeRate(toCurrencyCode, historicalDate),
+  ]);
+
+  return convertAlgorithm(fromValue, fromEuros, toEuros)
+}
+
+export { getCurrencyExchangeRate, getCurrencyExchangeRates, convertAlgorithm, convertCurrency };
