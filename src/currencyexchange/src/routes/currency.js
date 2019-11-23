@@ -6,21 +6,14 @@ import { Router } from 'express';
 import {
   getCurrencyExchangeRate,
   getCurrencyExchangeRates,
-  convertAlgorithm,
+  convertCurrency,
 } from '../services/serviceHandler';
 
 var router = Router();
 /* GET list of currency locations */
-router.get('/', function(req, res, next) {
-  var currencyData = getCurrencyExchangeRates();
-  currencyData
-    .then(function(data) {
-      res.send(data);
-    })
-    .catch(function(err) {
-      res.sendStatus(500);
-      next(err);
-    });
+router.get('/', async ()  => {
+  const data = await getCurrencyExchangeRates();
+  res.send(data);
 });
 
 /* POST
@@ -31,38 +24,21 @@ router.get('/', function(req, res, next) {
 /* GET
 /currency/{currencyFromAmount}/{currencyFromCode}/{currencyToCode}:
 */
-router.get('/:currencyFromAmount/:currencyFromCode/:currencyToCode', (req, res, next) => {
+router.get('/:currencyFromAmount/:currencyFromCode/:currencyToCode', async (req, res, next) => {
   const { currencyFromAmount, currencyFromCode, currencyToCode } = req.params;
-  var convertAlgorithmRef = convertAlgorithm(
+  
+  const data = await convertCurrency(
     currencyFromAmount,
     currencyFromCode,
     currencyToCode,
     'latest'
   );
-  convertAlgorithmRef
-    .then(data => {
-      res.send({ result: data });
-    })
-    .catch(err => {
-      res.sendStatus(500);
-      next(err);
-    });
+
+  
+  res.send({ result: data });
+    
 });
 
-/* GET exchange rate for currency code */
-router.get('/:code', function(req, res, next) {
-  console.log(req.params.code);
-  var currencyData = getCurrencyExchangeRate(req.params.code);
 
-  currencyData
-    .then(function(data) {
-      console.log(data);
-      res.send({ result: data });
-    })
-    .catch(function(err) {
-      res.sendStatus(500);
-      next(err);
-    });
-});
 
 export default router;

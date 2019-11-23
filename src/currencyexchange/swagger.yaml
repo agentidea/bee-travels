@@ -31,42 +31,9 @@ paths:
           description: Successfully got list of currency exchange rates
         '500':
           description: Internal Server Error
-  
-    /currency/search/:
-    post:
-      tags:
-        - name: CurrencyCode
-          description: 3 character currency code ( ISO-4217 )
-        - name: CurrencyName
-          description: Currency name
-        - name: Country
-          description: Country or Territory Name
-
-      summary: given Country name, return CurrencyName and CurrencyCode OR given CurrencyCode, return Country name and CurrencyName
-      description: ''
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: data
-          description: in body JSON pass Country name or CurrencyCode
-          required: true
-          schema:
-            $ref: '#/definitions/CurrencyMeta'
-      responses:
-        '200':
-          description: Successfully retrieved metatdata
-        '500':
-          description: Internal Server Error
-        '502':
-          description: Error connecting to service
-
   /currency/{currencyFromAmount}/{currencyFromCode}/{currencyToCode}:
     get:
       tags:
-        - Currency
         - Conversion
       summary: given currencyFromCode and currencyFromAmount (float) and currencyToCode, using daily rates, RETURNS the currencyToCode value (float)
       description: 'get the latest conversion rate for the day based off the clock on the server'
@@ -90,29 +57,3 @@ paths:
           description: Successfully got currency name and 3 character currency code data
         '500':
           description: Internal Server Error
-definitions:
-  CurrencyMeta:
-    type: object
-    properties:
-      currencyNameCurrencyCode:
-        type: array
-        items:
-          $ref: '#/definitions/currencyNameCurrencyCode'
-      currencyCodeCountryName:
-        type: array
-        items:
-          $ref: '#/definitions/currencyCodeCountryName'
-  currencyNameCurrencyCode:
-    type: object
-    properties:
-      CurrencyName:
-        type: string
-      CurrencyCode:
-        type: string
-  currencyCodeCountryName:
-    type: object
-    properties:
-      Country:
-        type: string
-      CurrencyCode:
-        type: string
