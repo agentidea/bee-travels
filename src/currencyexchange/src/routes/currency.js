@@ -31,8 +31,14 @@ router.get('/', function(req, res, next) {
 /* GET
 /currency/{currencyFromAmount}/{currencyFromCode}/{currencyToCode}:
 */
-router.get('/:currencyFromAmount/:currencyFromCode/:currencyFromCode', (req, res, next) => {
-  var convertAlgorithmRef = convertAlgorithm(fromValue, fromCurrencyCode, toCurrencyCode, 'latest');
+router.get('/:currencyFromAmount/:currencyFromCode/:currencyToCode', (req, res, next) => {
+  const { currencyFromAmount, currencyFromCode, currencyToCode } = req.params;
+  var convertAlgorithmRef = convertAlgorithm(
+    currencyFromAmount,
+    currencyFromCode,
+    currencyToCode,
+    'latest'
+  );
   convertAlgorithmRef
     .then(data => {
       res.send({ result: data });

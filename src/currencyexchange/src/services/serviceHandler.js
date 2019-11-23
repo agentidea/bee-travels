@@ -3,48 +3,27 @@
  * from an external API
  */
 import axios from 'axios';
-import { rejects } from 'assert';
 
 export const BASE_URL_ENDPOINT = 'https://api.exchangeratesapi.io/';
 
-function getCurrencyExchangeRate(countryCurrencyCode, timeIndicator = 'latest') {
-  return new Promise(function(resolve, reject) {
-    if (countryCurrencyCode) {
-      var currencyUrl = `${BASE_URL_ENDPOINT}${timeIndicator}`;
-      console.log(currencyUrl);
-      axios
-        .get(currencyUrl)
-        .then(function(response) {
-          if (response.data.rates.hasOwnProperty(countryCurrencyCode) === true) {
-            resolve(response.data.rates[countryCurrencyCode]);
-          } else {
-            reject(new Error(`no country code ${countryCurrencyCode}`));
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
-          resolve(error);
-        });
+async function getCurrencyExchangeRate(countryCurrencyCode, timeIndicator = 'latest') {
+  if (countryCurrencyCode) {
+    var currencyUrl = `${BASE_URL_ENDPOINT}${timeIndicator}`;
+
+    const { data } = await axios.get(currencyUrl);
+    if (data.rates[countryCurrencyCode]) {
+      return data.rates[countryCurrencyCode];
+    } else {
+      throw new Error(`no country code ${countryCurrencyCode}`);
     }
-  });
+  }
+  throw new Error(`please provide a currency code`);
 }
 
-function getCurrencyExchangeRates(timeIndicator = 'latest') {
-  return new Promise(function(resolve) {
-    var currencyUrl = `${BASE_URL_ENDPOINT}${timeIndicator}`;
-    console.log(currencyUrl);
-    axios
-      .get(currencyUrl)
-      .then(function(response) {
-        resolve(response.data);
-      })
-      .catch(function(error) {
-        //Yan suggests maybe return dummy data ...
-
-        //tdd - mocks share learnings thoughts ...
-        console.log(error);
-      });
-  });
+async function getCurrencyExchangeRates(timeIndicator = 'latest') {
+  const currencyUrl = `${BASE_URL_ENDPOINT}${timeIndicator}`;
+  const { data } = await axios.get(currencyUrl);
+  return data;
 }
 
 function convertAlgorithm(fromValue, fromEuros, toEuros) {

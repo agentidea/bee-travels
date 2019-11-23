@@ -7,7 +7,6 @@ import express from 'express';
 import logger from 'morgan';
 import cors from 'cors';
 import { serve, setup } from 'swagger-ui-express';
-import { join } from 'path';
 import currencyRouter from './routes/currency';
 import yaml from 'yamljs';
 
