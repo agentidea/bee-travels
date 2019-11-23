@@ -3,14 +3,18 @@
  */
 
 import { Router } from 'express';
+import asyncMiddleware from '../middlewares/asyncMiddleware';
 import { getCurrencyExchangeRates, convertCurrency } from '../services/serviceHandler';
 
 var router = Router();
 /* GET list of currency locations */
-router.get('/', async (req, res) => {
-  const data = await getCurrencyExchangeRates();
-  res.json(data);
-});
+router.get(
+  '/',
+  asyncMiddleware(async (req, res) => {
+    const data = await getCurrencyExchangeRates();
+    res.json(data);
+  })
+);
 
 /* POST
 /currency/search/:
@@ -20,17 +24,20 @@ post:
 /* GET
 /currency/{currencyFromAmount}/{currencyFromCode}/{currencyToCode}:
 */
-router.get('/:currencyFromAmount/:currencyFromCode/:currencyToCode', async (req, res) => {
-  const { currencyFromAmount, currencyFromCode, currencyToCode } = req.params;
+router.get(
+  '/:currencyFromAmount/:currencyFromCode/:currencyToCode',
+  asyncMiddleware(async (req, res) => {
+    const { currencyFromAmount, currencyFromCode, currencyToCode } = req.params;
 
-  const data = await convertCurrency(
-    currencyFromAmount,
-    currencyFromCode,
-    currencyToCode,
-    'latest'
-  );
+    const data = await convertCurrency(
+      currencyFromAmount,
+      currencyFromCode,
+      currencyToCode,
+      'latest'
+    );
 
-  res.json({ result: data });
-});
+    res.json({ result: data });
+  })
+);
 
 export default router;

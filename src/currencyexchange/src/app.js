@@ -47,4 +47,8 @@ app.use(function(err, req, res) {
   res.status(err.status || 500);
 });
 
+process.on('unhandledRejection', error => {
+  console.error('unhandledRejection', error.message);
+});
+
 export default app;
