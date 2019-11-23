@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "start": "npm run prod",
-    "server": "babel-node ./src/bin/www",
+    "server": "NODE_ENV=development babel-node ./src/bin/www",
     "server:prod": "node ./dist/bin/www",
-    "dev": "NODE_ENV=development npm-run-all server",
+    "dev": "nodemon server --watch src",
     "clean": "rimraf dist",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -42,6 +42,7 @@
     "constantinople": ">=3.1.1",
     "eslint": "^6.5.1",
     "jest": "^24.9.0",
+    "nodemon": "^2.0.1",
     "prettier": "^1.19.1",
     "uglify-js": ">=2.6.0"
   }

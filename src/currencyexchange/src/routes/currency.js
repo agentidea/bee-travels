@@ -3,30 +3,26 @@
  */
 
 import { Router } from 'express';
-import {
-  getCurrencyExchangeRate,
-  getCurrencyExchangeRates,
-  convertCurrency,
-} from '../services/serviceHandler';
+import { getCurrencyExchangeRates, convertCurrency } from '../services/serviceHandler';
 
 var router = Router();
 /* GET list of currency locations */
-router.get('/', async ()  => {
+router.get('/', async (req, res) => {
   const data = await getCurrencyExchangeRates();
-  res.send(data);
+  res.json(data);
 });
 
 /* POST
-    /currency/search/:
-    post:
-    */
+/currency/search/:
+post:
+*/
 
 /* GET
 /currency/{currencyFromAmount}/{currencyFromCode}/{currencyToCode}:
 */
-router.get('/:currencyFromAmount/:currencyFromCode/:currencyToCode', async (req, res, next) => {
+router.get('/:currencyFromAmount/:currencyFromCode/:currencyToCode', async (req, res) => {
   const { currencyFromAmount, currencyFromCode, currencyToCode } = req.params;
-  
+
   const data = await convertCurrency(
     currencyFromAmount,
     currencyFromCode,
@@ -34,11 +30,7 @@ router.get('/:currencyFromAmount/:currencyFromCode/:currencyToCode', async (req,
     'latest'
   );
 
-  
-  res.send({ result: data });
-    
+  res.json({ result: data });
 });
-
-
 
 export default router;
