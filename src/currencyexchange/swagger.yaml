@@ -1,3 +1,4 @@
+#YAML swagger for currency microservice
 swagger: '2.0'
 info:
   description: >-
