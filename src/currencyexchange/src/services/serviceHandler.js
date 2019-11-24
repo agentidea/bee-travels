@@ -6,9 +6,13 @@ import axios from 'axios';
 
 export const BASE_URL_ENDPOINT = 'https://api.exchangeratesapi.io/';
 
-async function getCurrencyExchangeRate(countryCurrencyCode, timeIndicator = 'latest') {
+async function getCurrencyExchangeRate(
+  countryCurrencyCode,
+  baseCode = 'EUR',
+  timeIndicator = 'latest'
+) {
   if (countryCurrencyCode) {
-    var currencyUrl = `${BASE_URL_ENDPOINT}${timeIndicator}`;
+    var currencyUrl = `${BASE_URL_ENDPOINT}${timeIndicator}?base=${baseCode}`;
 
     const { data } = await axios.get(currencyUrl);
     if (data.rates[countryCurrencyCode]) {
@@ -26,19 +30,13 @@ async function getCurrencyExchangeRates(timeIndicator = 'latest') {
   return data;
 }
 
-function convertAlgorithm(fromValue, fromEuros, toEuros) {
-  const fromTotal = fromValue / fromEuros;
-  const roundedNum = (Math.round(fromTotal * toEuros * 100) / 100).toFixed(2);
-  return roundedNum;
-}
-
 async function convertCurrency(fromValue, fromCurrencyCode, toCurrencyCode, historicalDate) {
-  const [fromEuros, toEuros] = await Promise.all([
-    getCurrencyExchangeRate(fromCurrencyCode, historicalDate),
-    getCurrencyExchangeRate(toCurrencyCode, historicalDate),
-  ]);
-
-  return convertAlgorithm(fromValue, fromEuros, toEuros);
+  const exchangeRate = await getCurrencyExchangeRate(
+    toCurrencyCode,
+    fromCurrencyCode,
+    historicalDate
+  );
+  return fromValue * exchangeRate;
 }
 
-export { getCurrencyExchangeRate, getCurrencyExchangeRates, convertAlgorithm, convertCurrency };
+export { getCurrencyExchangeRate, getCurrencyExchangeRates, convertCurrency };

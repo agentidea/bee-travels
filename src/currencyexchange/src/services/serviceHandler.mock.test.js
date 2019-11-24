@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
   getCurrencyExchangeRate,
   getCurrencyExchangeRates,
-  convertAlgorithm,
+  convertCurrency,
 } from './serviceHandler';
 import ratesMock from './mocks/rates.json';
 
@@ -46,13 +46,12 @@ describe('Get a specific rate for a specific country code that does exist, i.e. 
   });
 });
 
-describe('test conversion algorith', () => {
-  it('should return a numeric rate', () => {
-    var fromValue = 10; //YEN
-    var fromEuros = 19; //YEN
-    var toEuros = 21; //YEN
-    var result = convertAlgorithm(fromValue, fromEuros, toEuros);
+describe('convertCurrency', () => {
+  it('should return a numeric rate', async () => {
+    jest.spyOn(axios, 'get').mockResolvedValueOnce(ratesMock);
 
-    expect(result).toEqual('11.05');
+    var result = await convertCurrency(10, 'EUR', 'USD', 'latest');
+
+    expect(result).toEqual(11.058);
   });
 });

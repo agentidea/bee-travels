@@ -30,9 +30,9 @@ router.get(
     const { currencyFromAmount, currencyFromCode, currencyToCode } = req.params;
 
     const data = await convertCurrency(
-      currencyFromAmount,
-      currencyFromCode,
-      currencyToCode,
+      parseFloat(currencyFromAmount.trim()),
+      currencyFromCode.trim(),
+      currencyToCode.trim(),
       'latest'
     );
 

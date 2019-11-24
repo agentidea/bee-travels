@@ -1,7 +1,7 @@
 import {
   getCurrencyExchangeRate,
   getCurrencyExchangeRates,
-  convertAlgorithm,
+  convertCurrency,
 } from './serviceHandler';
 
 describe('Get all currency exchange rates', () => {
@@ -33,13 +33,10 @@ describe('Get a specific rate for a specific country code that does exist, i.e. 
   });
 });
 
-describe('test conversion algorith', () => {
-  it('should return a numeric rate', () => {
-    var fromValue = 10; //YEN
-    var fromEuros = 19; //YEN
-    var toEuros = 21; //YEN
-    var result = convertAlgorithm(fromValue, fromEuros, toEuros);
+describe('convertCurrency', () => {
+  it('should return a numeric rate', async () => {
+    var result = await convertCurrency(10, 'EUR', 'USD', 'latest');
 
-    expect(result).toEqual('11.05');
+    expect(result).toEqual(11.058);
   });
 });
