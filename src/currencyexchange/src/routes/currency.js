@@ -4,9 +4,11 @@
 
 import { Router } from 'express';
 import asyncMiddleware from '../middlewares/asyncMiddleware';
+import * as countryCurrencyCodeHandler from '../services/countryCurrencyCodeHandler';
 import { getCurrencyExchangeRates, convertCurrency } from '../services/serviceHandler';
 
 var router = Router();
+
 /* GET list of currency locations */
 router.get(
   '/',
@@ -17,9 +19,24 @@ router.get(
 );
 
 /* POST
-/currency/search/:
+/search:
 post:
 */
+router.post(
+  '/search',
+  asyncMiddleware(async (req, res) => {
+    const { Country, CurrencyCode } = req.body;
+    if (Country) {
+      const result = await countryCurrencyCodeHandler.getCurrencyNameAndCode(Country);
+      return res.json(result);
+    }
+    if (CurrencyCode) {
+      const result = await countryCurrencyCodeHandler.getCountryAndCurrencyCode(CurrencyCode);
+      return res.json(result);
+    }
+    return res.status(400).json({ error: 'please pass in either Country or CurrencyCode' });
+  })
+);
 
 /* GET
 /currency/{currencyFromAmount}/{currencyFromCode}/{currencyToCode}:

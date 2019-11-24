@@ -7,6 +7,7 @@
  *
  */
 import csv from 'csvtojson';
+import NotFoundError from '../errors/NotFoundError';
 
 async function readData() {
   const jsonArray = await csv({
@@ -24,7 +25,7 @@ async function getCurrencyNameAndCode(countryName) {
   const countryRow = data.find(row => row.country.toLowerCase() === countryName.toLowerCase());
 
   if (!countryRow) {
-    throw new Error(`no country found for country name ${countryName}`);
+    throw new NotFoundError(`no country found for country name ${countryName}`);
   }
 
   return countryRow;
@@ -41,7 +42,7 @@ async function getCountryAndCurrencyCode(currencyCode) {
   );
 
   if (!countryRow) {
-    throw new Error(`currency code ${currencyCode} not found`);
+    throw new NotFoundError(`currency code ${currencyCode} not found`);
   }
 
   return countryRow;
